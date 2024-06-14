@@ -16,6 +16,7 @@ const App = () => {
           <p>Generated Short Link: <a href={generatedUrl} target="_blank" rel="noopener noreferrer">{generatedUrl}</a></p>
         </div>
       )}
+      {generatedUrl};
     </div>
   );
 };

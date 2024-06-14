@@ -19,7 +19,7 @@ const ShortLink = ({ setGeneratedUrl }) => {
 
     const requestData = {
       url,
-      expirationDate: new Date(expirationDate).toISOString() || NULL,
+      expirationDate: expirationDate? new Date(expirationDate).toISOString : null,
     };
 
     axios.post("http://localhost:8080/generate", requestData)
@@ -59,6 +59,8 @@ const ShortLink = ({ setGeneratedUrl }) => {
         </div>
         <button type="submit" className="button">Generate Short Link</button>
       </form>
+
+      
     </div>
   );
 };
