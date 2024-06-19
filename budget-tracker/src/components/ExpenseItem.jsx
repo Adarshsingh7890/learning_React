@@ -1,9 +1,11 @@
 import React from 'react'
 import { formatCurrency, formatDateToLocaleString } from '../helpers'
 import { getAllMatchingItems } from '../helpers';
-import { Link } from 'react-router-dom';
-function ExpenseItem({expense, budgets}) {
-    const matchingBudget = budgets.find(budget => budget.id === expense.budgetId);
+import { Link, useFetcher } from 'react-router-dom';
+import { TrashIcon } from '@heroicons/react/24/solid';
+function ExpenseItem({expense}) {
+  const fetcher = useFetcher();
+
     const budget = getAllMatchingItems({
         category: "budgets",
         key:"id",
@@ -15,7 +17,16 @@ function ExpenseItem({expense, budgets}) {
         <td>{formatCurrency(expense.amount)}</td>
         <td>{formatDateToLocaleString( expense.createdAt)}</td>
         <td><Link to = {`/budget/${budget.id}`} style = {{"--accent": budget.color}}>{budget.name}</Link></td>
-        <td>fetcher</td>
+        <td>
+          <fetcher.Form method='post' > 
+            <input type="hidden"  name='_action' value="deleteExpense"/>
+            <input type="hidden" name='expenseId' value={expense.id} />
+            <button type='submit' className='btn btn--warning' aria-label= {`Delete ${expense.name} expense`}>
+              <TrashIcon width = {20}/>
+            </button>
+            
+          </fetcher.Form>
+        </td>
     </>
   )
 }

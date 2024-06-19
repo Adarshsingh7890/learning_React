@@ -1,13 +1,33 @@
 import React from 'react'
 import { useLoaderData } from 'react-router-dom'
-import { fetchData } from '../helpers'
+import { deleteItem, fetchData } from '../helpers'
 import Table from '../components/Table'
+import { toast } from 'react-toastify'
 
-export function expensesLoader() {
+export async function expensesLoader() {
     
-    const expenses = fetchData("expenses")
+    const expenses =  fetchData("expenses")
     return { userName, budgets,expenses }
+}
+
+export  const expenseAction = async() => {
+
+  const data = await request.formData();
+  const { _action, ...values } = Object.fromEntries(data)
+
+  if (_action === "createExpense") {
+    try {
+      deleteItem({
+        name: values.newExpense,
+        amount: values.newExpenseAmount,
+        budgetId: values.newExpenseBudget,
+      })
+      return toast.success(`Expenses ${values.newExpense} created!`)
+    } catch (e) {
+      throw new Error("There was a problem creating your Expenses.")
+    }
   }
+}
 function ExpensesPage() {
     const {expenses} = useLoaderData();
 
