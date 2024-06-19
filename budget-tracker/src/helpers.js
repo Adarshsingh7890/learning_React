@@ -1,4 +1,4 @@
-export const waait = () => new Promise(res => setTimeout(res, Math.random() * 2000))
+export const waait = () => new Promise(res => setTimeout(res, Math.random() * 800))
 
 
 // colors
@@ -47,4 +47,37 @@ export const createExpense = ({
 // delete item
 export const deleteItem = ({ key }) => {
   return localStorage.removeItem(key)
+}
+
+export const formatCurrency = (amt)=>{
+  return amt.toLocaleString(undefined,{
+    style:"currency",
+    currency:"USD"
+  });
+}
+
+export const calculateSpentByBudget = (budgetId) =>{
+  const expenses = fetchData("expenses")??[];
+  const budgetSpent = expenses.reduce((acc, expense)=>{
+    if (expense.budgetId !== budgetId)return acc;
+
+    return acc += expense.amount;
+  },0)
+
+  return budgetSpent;
+}
+export const formatPercentage = (amt)=>{
+  return amt.toLocaleString(undefined,{
+    style:"percent",
+    minimumFractionDigits: 0
+  })
+}
+
+export const formatDateToLocaleString = (epoch)=>{
+  return new Date(epoch).toLocaleDateString();
+}
+
+export const getAllMatchingItems = ({category,key,value})=>{
+  const data = fetchData(category)??[];
+  return data.filter((item) => item[key] ===value );
 }
