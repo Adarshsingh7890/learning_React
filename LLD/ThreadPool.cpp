@@ -3,6 +3,7 @@
 #include<condition_variable>
 #include<functional>
 #include<thread>
+#include <queue>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ class ThreadPool{
         mutex mutex;
         condition_variable cv;
         vector<thread>threads;
-        vector<function<void()>>tasks;
+        queue<function<void()>>tasks;
     
     public:
         ThreadPool(int numThreads) : poolSize(numThreads), stop(false){
@@ -29,7 +30,7 @@ class ThreadPool{
                         if (stop || tasks.empty())return;
 
                         task = move(tasks.front());
-                        tasks.pop_back();
+                        tasks.pop();
                         lock.unlock();
                         task();
                     }
@@ -52,7 +53,7 @@ class ThreadPool{
 
         void ExecuteTask(function<void()>task){
             unique_lock<std::mutex>lock(mutex);
-            tasks.push_back(task);
+            tasks.push(task);
             lock.unlock();
 
             cv.notify_one();
