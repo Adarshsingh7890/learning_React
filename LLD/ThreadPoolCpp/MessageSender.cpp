@@ -7,6 +7,7 @@ MessageSender::MessageSender(): stop(false){}
 void MessageSender::submit(Message message){
     unique_lock<std::mutex>lock(mutex);
     tasks.push(message);
+    lock.unlock();
     condition.notify_one();
 }
 
@@ -33,6 +34,7 @@ void MessageSender :: stopWorker(){
     {
         unique_lock<std::mutex>lock(mutex);
         stop = true;
+        lock.unlock();
     }
 
     condition.notify_all();
